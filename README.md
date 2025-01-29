@@ -3,6 +3,8 @@
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-2.0.0-blue.svg)](https://kotlinlang.org)
 [![Compose Version](https://img.shields.io/badge/Jetpack%20Compose-1.10.0-brightgreen)](https://developer.android.com/jetpack/compose)
 
+Hello Mahfoudh
+
 Loukatah (لُقطة - "A thing to be collected") is an Android app that empowers communities to reunite people with their lost belongings through collaborative tracking, discovery, and connection.
 
 ## Features ✨
