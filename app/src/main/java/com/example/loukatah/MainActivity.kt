@@ -36,11 +36,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             LoukatahTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                   /* Greeting(
                         name = "Mahfoud!",
                         modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+                    )*/
+                    FirstUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -62,6 +62,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun FirstUI(modifier: Modifier = Modifier) {
     // TODO 1: Create state variables for text input and items list
+    var textValue by remember { mutableStateOf("") }
+    var allItems = remember { mutableStateListOf<String>("Ali","Oussama","Adel") }
+    var displayedItems by remember { mutableStateOf(allItems.toList()) }
 
     Column(
         modifier = modifier
@@ -69,14 +72,42 @@ fun FirstUI(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+            textValue = "$textValue", // TODO 2: Connect to state
+            onTextValueChange = { /* TODO 3: Update text state */
+                value ->
+                textValue = value
+                //real time search
+              if(textValue.isNotEmpty()) {
+                displayedItems = allItems.filter { it.contains(value, ignoreCase = true)}
+               }else{
+                displayedItems = allItems.toList()
+            }},
+            onAddItem = { /* TODO 4: Add item to list */
+                itemToAdd ->
+                if(textValue.isNotEmpty()){
+                    allItems.add(itemToAdd);
+                    displayedItems = allItems.toList()
+                    textValue = "";
+                }
+            },
+            onSearch = { /* TODO 5: Implement search functionality */
+                itemToSearch ->
+                if(textValue.isNotEmpty()) {
+                    displayedItems =  allItems.filter { it.contains(itemToSearch, ignoreCase = true)}
+                    textValue = ""
+                }else{
+                    displayedItems = allItems.toList()
+                }
+            }
         )
 
         // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        CardsList(
+            displayedItems,
+            onRemove = { itemToRemove -> allItems.remove(itemToRemove)
+                displayedItems = allItems
+            }
+        )
     }
 }
 
@@ -108,11 +139,11 @@ fun SearchInputBar(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
+            Button(onClick = { /* TODO 7: Handle add button click */ onAddItem(textValue)}) {
                 Text("Add")
             }
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
+            Button(onClick = { /* TODO 8: Handle search button click */ onSearch(textValue)}) {
                 Text("Search")
             }
         }
@@ -124,18 +155,30 @@ fun SearchInputBar(
  * @param displayedItems List of items to display
  */
 @Composable
-fun CardsList(displayedItems: List<String>) {
+fun CardsList(
+    displayedItems: List<String>,
+    onRemove : (String) -> Unit
+) {
     // TODO 9: Implement LazyColumn to display items
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         // TODO 10: Create cards for each item in the list
-        items(displayedItems) { item ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+        if(displayedItems.isNotEmpty()){
+            items(displayedItems) { item ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Text(text = "$item", modifier = Modifier.padding(16.dp))
+                    Button(onClick = {onRemove(item)}) {
+                        Text("Delete")
+                    }
+                }
+            }
+        }else{
+            item {
+                Text(text = "No items to display")
             }
         }
     }
