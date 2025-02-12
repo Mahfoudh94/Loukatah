@@ -20,12 +20,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.loukatah.ui.theme.LoukatahTheme
 
@@ -36,16 +34,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             LoukatahTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoud!",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+                    FirstUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
+
+/**
+ * Main composable function for the UI layout
+ */
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -62,6 +60,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun FirstUI(modifier: Modifier = Modifier) {
     // TODO 1: Create state variables for text input and items list
+    var textValue by remember { mutableStateOf("") }
+    var itemsList by remember { mutableStateOf<List<String>>(emptyList()) }
 
     Column(
         modifier = modifier
@@ -69,14 +69,25 @@ fun FirstUI(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+            textValue = textValue, // TODO 2: Connect to state
+            onTextValueChange = { newValue ->
+                textValue = newValue // TODO 3: Update text state
+            },
+            onAddItem = {
+                if (textValue.isNotBlank()) {
+                    itemsList = itemsList + textValue // TODO 4: Add item to list
+                    textValue = "" // Clear the input after adding
+                }
+            },
+            onSearch = {
+                // TODO 5: Implement search functionality
+                val filteredList = itemsList.filter { it.contains(textValue, ignoreCase = true) }
+                itemsList = filteredList
+            }
         )
 
         // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        CardsList(itemsList)
     }
 }
 
@@ -97,7 +108,7 @@ fun SearchInputBar(
     Column {
         TextField(
             value = textValue,
-            onValueChange = onTextValueChange,
+            onValueChange = onTextValueChange, // Update text on change
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Enter text...") }
         )
@@ -108,11 +119,11 @@ fun SearchInputBar(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
+            Button(onClick = { onAddItem(textValue) }) { // TODO 7: Handle add button click
                 Text("Add")
             }
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
+            Button(onClick = { onSearch(textValue) }) { // TODO 8: Handle search button click
                 Text("Search")
             }
         }
@@ -135,7 +146,7 @@ fun CardsList(displayedItems: List<String>) {
                     .padding(vertical = 4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+                Text(text = item, modifier = Modifier.padding(16.dp)) // Display item text
             }
         }
     }

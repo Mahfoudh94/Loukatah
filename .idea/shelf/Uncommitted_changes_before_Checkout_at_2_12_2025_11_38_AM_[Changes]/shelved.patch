@@ -1,0 +1,146 @@
+Index: app/src/main/java/com/example/loukatah/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.loukatah\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\nimport androidx.compose.foundation.layout.Arrangement\r\nimport androidx.compose.foundation.layout.Column\r\nimport androidx.compose.foundation.layout.Row\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.fillMaxWidth\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.foundation.lazy.LazyColumn\r\nimport androidx.compose.foundation.lazy.items\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.Card\r\nimport androidx.compose.material3.CardDefaults\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.material3.TextField\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.mutableStateListOf\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.remember\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport com.example.loukatah.ui.theme.LoukatahTheme\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge()\r\n        setContent {\r\n            LoukatahTheme {\r\n                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->\r\n                    Greeting(\r\n                        name = \"Mahfoud!\",\r\n                        modifier = Modifier.padding(innerPadding)\r\n                    )\r\n                    //FirstUI(modifier = Modifier.padding(innerPadding))\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun Greeting(name: String, modifier: Modifier = Modifier) {\r\n    Text(\r\n        text = \"Hello $name!\",\r\n        modifier = modifier\r\n    )\r\n}\r\n\r\n/**\r\n * Main composable function for the UI layout\r\n * @param modifier Modifier for layout adjustments\r\n */\r\n@Composable\r\nfun FirstUI(modifier: Modifier = Modifier) {\r\n    // TODO 1: Create state variables for text input and items list\r\n\r\n    Column(\r\n        modifier = modifier\r\n            .padding(25.dp)\r\n            .fillMaxSize()\r\n    ) {\r\n        SearchInputBar(\r\n            textValue = \"\", // TODO 2: Connect to state\r\n            onTextValueChange = { /* TODO 3: Update text state */ },\r\n            onAddItem = { /* TODO 4: Add item to list */ },\r\n            onSearch = { /* TODO 5: Implement search functionality */ }\r\n        )\r\n\r\n        // TODO 6: Display list of items using CardsList composable\r\n        CardsList(emptyList())\r\n    }\r\n}\r\n\r\n/**\r\n * Composable for search and input controls\r\n * @param textValue Current value of the input field\r\n * @param onTextValueChange Callback for text changes\r\n * @param onAddItem Callback for adding new items\r\n * @param onSearch Callback for performing search\r\n */\r\n@Composable\r\nfun SearchInputBar(\r\n    textValue: String,\r\n    onTextValueChange: (String) -> Unit,\r\n    onAddItem: (String) -> Unit,\r\n    onSearch: (String) -> Unit\r\n) {\r\n    Column {\r\n        TextField(\r\n            value = textValue,\r\n            onValueChange = onTextValueChange,\r\n            modifier = Modifier.fillMaxWidth(),\r\n            placeholder = { Text(\"Enter text...\") }\r\n        )\r\n\r\n        Row(\r\n            modifier = Modifier\r\n                .fillMaxWidth()\r\n                .padding(vertical = 8.dp),\r\n            horizontalArrangement = Arrangement.SpaceBetween\r\n        ) {\r\n            Button(onClick = { /* TODO 7: Handle add button click */ }) {\r\n                Text(\"Add\")\r\n            }\r\n\r\n            Button(onClick = { /* TODO 8: Handle search button click */ }) {\r\n                Text(\"Search\")\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n/**\r\n * Composable for displaying a list of items in cards\r\n * @param displayedItems List of items to display\r\n */\r\n@Composable\r\nfun CardsList(displayedItems: List<String>) {\r\n    // TODO 9: Implement LazyColumn to display items\r\n    LazyColumn(modifier = Modifier.fillMaxSize()) {\r\n        // TODO 10: Create cards for each item in the list\r\n        items(displayedItems) { item ->\r\n            Card(\r\n                modifier = Modifier\r\n                    .fillMaxWidth()\r\n                    .padding(vertical = 4.dp),\r\n                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)\r\n            ) {\r\n                Text(text = \"Sample Item\", modifier = Modifier.padding(16.dp))\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/loukatah/MainActivity.kt b/app/src/main/java/com/example/loukatah/MainActivity.kt
+--- a/app/src/main/java/com/example/loukatah/MainActivity.kt	(revision f8a983ffb8c29a98ef4c162ad79a7fb3044c2dfe)
++++ b/app/src/main/java/com/example/loukatah/MainActivity.kt	(date 1739354333871)
+@@ -4,26 +4,11 @@
+ import androidx.activity.ComponentActivity
+ import androidx.activity.compose.setContent
+ import androidx.activity.enableEdgeToEdge
+-import androidx.compose.foundation.layout.Arrangement
+-import androidx.compose.foundation.layout.Column
+-import androidx.compose.foundation.layout.Row
+-import androidx.compose.foundation.layout.fillMaxSize
+-import androidx.compose.foundation.layout.fillMaxWidth
+-import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.lazy.LazyColumn
+ import androidx.compose.foundation.lazy.items
+-import androidx.compose.material3.Button
+-import androidx.compose.material3.Card
+-import androidx.compose.material3.CardDefaults
+-import androidx.compose.material3.Scaffold
+-import androidx.compose.material3.Text
+-import androidx.compose.material3.TextField
+-import androidx.compose.runtime.Composable
+-import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.mutableStateListOf
+-import androidx.compose.runtime.mutableStateOf
+-import androidx.compose.runtime.remember
+-import androidx.compose.runtime.setValue
++import androidx.compose.material3.*
++import androidx.compose.runtime.*
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+@@ -36,32 +21,22 @@
+         setContent {
+             LoukatahTheme {
+                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+-                    Greeting(
+-                        name = "Mahfoud!",
+-                        modifier = Modifier.padding(innerPadding)
+-                    )
+-                    //FirstUI(modifier = Modifier.padding(innerPadding))
++                    FirstUI(modifier = Modifier.padding(innerPadding))
+                 }
+             }
+         }
+     }
+ }
+-
+-@Composable
+-fun Greeting(name: String, modifier: Modifier = Modifier) {
+-    Text(
+-        text = "Hello $name!",
+-        modifier = modifier
+-    )
+-}
+ 
+ /**
+  * Main composable function for the UI layout
+- * @param modifier Modifier for layout adjustments
+  */
+ @Composable
+ fun FirstUI(modifier: Modifier = Modifier) {
+     // TODO 1: Create state variables for text input and items list
++    var text by remember { mutableStateOf("") }
++    val itemList = remember { mutableStateListOf<String>() }
++    val displayedItems = remember { mutableStateListOf<String>() }
+ 
+     Column(
+         modifier = modifier
+@@ -69,23 +44,28 @@
+             .fillMaxSize()
+     ) {
+         SearchInputBar(
+-            textValue = "", // TODO 2: Connect to state
+-            onTextValueChange = { /* TODO 3: Update text state */ },
+-            onAddItem = { /* TODO 4: Add item to list */ },
+-            onSearch = { /* TODO 5: Implement search functionality */ }
++            textValue = text, // TODO 2: Connect to state
++            onTextValueChange = { text = it }, // TODO 3: Update text state
++            onAddItem = {
++                if (it.isNotBlank()) {
++                    itemList.add(it) // إضافة العنصر إلى القائمة
++                    displayedItems.add(it) // تحديث القائمة المعروضة
++                    text = "" // مسح حقل الإدخال بعد الإضافة
++                }
++            },
++            onSearch = { query ->
++                displayedItems.clear()
++                displayedItems.addAll(itemList.filter { it.contains(query, ignoreCase = true) }) // تصفية القائمة
++            }
+         )
+ 
+         // TODO 6: Display list of items using CardsList composable
+-        CardsList(emptyList())
++        CardsList(displayedItems)
+     }
+ }
+ 
+ /**
+  * Composable for search and input controls
+- * @param textValue Current value of the input field
+- * @param onTextValueChange Callback for text changes
+- * @param onAddItem Callback for adding new items
+- * @param onSearch Callback for performing search
+  */
+ @Composable
+ fun SearchInputBar(
+@@ -108,11 +88,11 @@
+                 .padding(vertical = 8.dp),
+             horizontalArrangement = Arrangement.SpaceBetween
+         ) {
+-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
++            Button(onClick = { onAddItem(textValue) }) { // TODO 7: Handle add button click
+                 Text("Add")
+             }
+ 
+-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
++            Button(onClick = { onSearch(textValue) }) { // TODO 8: Handle search button click
+                 Text("Search")
+             }
+         }
+@@ -121,7 +101,6 @@
+ 
+ /**
+  * Composable for displaying a list of items in cards
+- * @param displayedItems List of items to display
+  */
+ @Composable
+ fun CardsList(displayedItems: List<String>) {
+@@ -135,7 +114,7 @@
+                     .padding(vertical = 4.dp),
+                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+             ) {
+-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
++                Text(text = item, modifier = Modifier.padding(16.dp)) // عرض العنصر الحقيقي
+             }
+         }
+     }
