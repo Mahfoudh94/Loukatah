@@ -25,9 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.loukatah.ui.theme.LoukatahTheme
+import androidx.compose.ui.tooling.preview.Preview as Preview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,47 +36,52 @@ class MainActivity : ComponentActivity() {
         setContent {
             LoukatahTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoud!",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+                    FirstUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 /**
  * Main composable function for the UI layout
  * @param modifier Modifier for layout adjustments
  */
+@Preview
 @Composable
 fun FirstUI(modifier: Modifier = Modifier) {
-    // TODO 1: Create state variables for text input and items list
-
+//     TODO 1: Create state variables for text input and items list
+    var textValue by remember { mutableStateOf("") }
+    val allItems = remember { mutableStateListOf<String>() }
+    var searchQuery by remember { mutableStateOf("") }
+    val displayedItems = if (searchQuery.isEmpty()) {
+        allItems
+    } else {
+        allItems.filter { it.contains(searchQuery, ignoreCase = true) }
+    }
     Column(
-        modifier = modifier
+        modifier = Modifier
             .padding(25.dp)
             .fillMaxSize()
     ) {
         SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+            textValue = textValue, // TODO 2: Connect to state
+            onTextValueChange = {textValue=it /* TODO 3: Update text state */ },
+            onAddItem = {
+
+                if (textValue.isNotBlank()){
+                    allItems.add(textValue)
+                    textValue=""
+                }
+
+
+
+
+                /* TODO 4: Add item to list */ },
+            onSearch = { searchQuery = textValue }/* TODO 5: Implement search functionality */
         )
 
         // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        CardsList(displayedItems)
     }
 }
 
@@ -99,7 +104,7 @@ fun SearchInputBar(
             value = textValue,
             onValueChange = onTextValueChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Enter text...") }
+            placeholder = { Text("Enter text here...") }
         )
 
         Row(
@@ -108,13 +113,20 @@ fun SearchInputBar(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
+            Button(onClick = {
+                if (textValue.isNotBlank()) {
+                    onAddItem(textValue)  // Call onAddItem when the Add button is clicked
+                }
+            }) {
                 Text("Add")
             }
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
+            /*TODO 7: Handle add button click */
+            Button(onClick = { onSearch(textValue) }) {
                 Text("Search")
             }
+
+            /* TODO 8: Handle search button click */
         }
     }
 }
@@ -135,7 +147,10 @@ fun CardsList(displayedItems: List<String>) {
                     .padding(vertical = 4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+                Text(
+                    text = item,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
