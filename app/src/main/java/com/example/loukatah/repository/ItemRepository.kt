@@ -13,9 +13,9 @@ object ItemRepository {
             picture = "https://images.unsplash.com/photo-1613243555978-636c48dc653c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
             item_category = "Personal Items",
             coordinates = Pair(34.0522, -118.2437),
-            date_lost = Date(),
-            createdAt = Date(),
-            updatedAt = Date()
+            date_lost = Date().toString(),
+            createdAt = Date().toString(),
+            updatedAt = Date().toString()
         ),
         Item(
             id = "2",
@@ -25,9 +25,9 @@ object ItemRepository {
             picture = "https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
             item_category = "Electronics",
             coordinates = Pair(34.0522, -118.2437),
-            date_lost = Date(),
-            createdAt = Date(),
-            updatedAt = Date()
+            date_lost = Date().toString(),
+            createdAt = Date().toString(),
+            updatedAt = Date().toString()
         ),
         Item(
             id = "3",
@@ -37,9 +37,9 @@ object ItemRepository {
             picture = "https://images.unsplash.com/photo-1566150902887-e24c4a5d9d07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
             item_category = "Personal Items",
             coordinates = Pair(34.0522, -118.2437),
-            date_lost = Date(),
-            createdAt = Date(),
-            updatedAt = Date()
+            date_lost = Date().toString(),
+            createdAt = Date().toString(),
+            updatedAt = Date().toString()
         ),
         Item(
             id = "4",
@@ -49,9 +49,9 @@ object ItemRepository {
             picture = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
             item_category = "Electronics",
             coordinates = Pair(34.0522, -118.2437),
-            date_lost = Date(),
-            createdAt = Date(),
-            updatedAt = Date()
+            date_lost = Date().toString(),
+            createdAt = Date().toString(),
+            updatedAt = Date().toString()
         ),
         Item(
             id = "5",
@@ -61,9 +61,9 @@ object ItemRepository {
             picture = "https://images.unsplash.com/photo-1551806235-f1c8d1f2d0b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
             item_category = "Documents",
             coordinates = Pair(34.0522, -118.2437),
-            date_lost = Date(),
-            createdAt = Date(),
-            updatedAt = Date()
+            date_lost = Date().toString(),
+            createdAt = Date().toString(),
+            updatedAt = Date().toString()
         )
     )
 
