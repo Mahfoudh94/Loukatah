@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
                     MainScreen(
                         itemViewModel,
-                        itemCategoryViewModel,
+
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
