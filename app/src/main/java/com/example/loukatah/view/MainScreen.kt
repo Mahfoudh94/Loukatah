@@ -2,146 +2,131 @@ package com.example.loukatah.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.example.loukatah.viewmodel.ItemCategoryViewModel
-import com.example.loukatah.viewmodel.ItemViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.example.loukatah.model.Item
-import com.example.loukatah.model.ItemCategory
-import java.text.SimpleDateFormat
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.loukatah.model.Item
+import com.example.loukatah.viewmodel.ItemViewModel
+import java.text.SimpleDateFormat
 
 @Composable
-fun MainScreen(itemViewModel: ItemViewModel, itemCategoryViewModel: ItemCategoryViewModel, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize()) {
+fun MainScreen(itemViewModel: ItemViewModel, modifier: Modifier = Modifier) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier.height(16.dp))
+        TopBar()
         val itemState by itemViewModel.uiState.collectAsState()
-        val categoryState by itemCategoryViewModel.categoryState.collectAsState()
-        CategoryRow(categoryState.categories)
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+
+        LazyColumn(modifier = Modifier.weight(1f).padding(horizontal = 16.dp)) {
             when {
                 itemState.isLoading -> {
                     item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             CircularProgressIndicator()
                         }
                     }
                 }
                 itemState.items.isEmpty() -> {
                     item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(text = "No items found")
                         }
                     }
                 }
                 else -> {
                     items(itemState.items) { item ->
-                        CardItem(item = item)
+                        CardItem(item)
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CategoryRow(categories: List<ItemCategory>) {
-    LazyRow(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)) {
-        items(categories) { category ->
-            CategoryItem(category = category)
+        FloatingActionButton(onClick = { /* Add new item */ }, modifier = Modifier.align(Alignment.End).padding(16.dp)) {
+            Icon(Icons.Default.Add, contentDescription = "Add")
         }
+        BottomNavigationBar()
     }
 }
 
 @Composable
-fun CategoryItem(category: ItemCategory) {
-    Column(
-        modifier = Modifier.padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+fun TopBar() {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = category.icon,
-            contentDescription = category.name,
-            modifier = Modifier.size(48.dp)
+        TextField(
+            value = "",
+            onValueChange = {},
+            placeholder = { Text("Search") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            modifier = Modifier.weight(1f).padding(top = 8.dp)
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = category.name)
+        Spacer(modifier = Modifier.width(8.dp))
+        IconButton(onClick = { /* Open categories */ }, modifier = Modifier.padding(top = 8.dp)) {
+            Icon(Icons.Default.GridView, contentDescription = "Categories")
+        }
     }
 }
 
 @Composable
 fun CardItem(item: Item) {
-    Card(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)) {
-        Column(modifier = Modifier.padding(16.dp)) {
+    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), shape = RoundedCornerShape(8.dp)) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = item.picture,
                 contentDescription = item.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp))
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = item.description,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Status: ",
-                    style = MaterialTheme.typography.labelMedium
-                )
-                Text(
-                    text = item.status,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = when (item.status) {
-                            "Lost" -> Color.Red
-                            "Found" -> Color.Green
-                            else -> MaterialTheme.colorScheme.onSurface
-                        }
-                    )
-                )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = item.title, style = MaterialTheme.typography.titleLarge)
+                Text(text = item.description, style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Lost/Found Date: ${SimpleDateFormat("MMM dd, yyyy").format(item.date_lost)}")
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Category: ${item.item_category}",
-                style = MaterialTheme.typography.labelMedium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Lost/Found Date: ${SimpleDateFormat("MMM dd, yyyy").format(item.date_lost)}",
-                style = MaterialTheme.typography.labelSmall
-            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (item.status == "Lost") Color.Red else Color.Green
+                )
+            ) {
+                Text(text = item.status, color = Color.White, textAlign = TextAlign.Center)
+            }
         }
+    }
+}
+
+@Composable
+fun BottomNavigationBar() {
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") },
+            selected = false,
+            onClick = {}
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Map, contentDescription = "Map") },
+            label = { Text("Map") },
+            selected = false,
+            onClick = {}
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+            label = { Text("Profile") },
+            selected = false,
+            onClick = {}
+        )
     }
 }
