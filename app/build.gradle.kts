@@ -50,6 +50,10 @@ dependencies {
     // Compose integration with Activity for setting up Compose UI in Activities
     implementation(libs.androidx.activity.compose)
     // Coil image loading library for Compose to load and display images efficiently
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation("androidx.compose.material:material:1.5.4")
+    //
     implementation(libs.io.coil.kt.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -63,4 +67,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.navigation.compose)
 }

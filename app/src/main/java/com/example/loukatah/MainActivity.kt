@@ -20,12 +20,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LoukatahTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
 
                     val itemViewModel = viewModel<ItemViewModel>()
                     val itemCategoryViewModel = viewModel<ItemCategoryViewModel>()
-
-
                     MainScreen(
                         itemViewModel,
                         itemCategoryViewModel,

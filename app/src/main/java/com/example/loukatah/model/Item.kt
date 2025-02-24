@@ -10,6 +10,7 @@ data class Item(
     val picture: String?,
     val item_category: String,
     val coordinates: Pair<Double, Double>,
+    val location : String,
     val date_lost: Date,
     val createdAt: Date,
     val updatedAt: Date

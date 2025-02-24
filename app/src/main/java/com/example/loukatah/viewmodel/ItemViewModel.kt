@@ -24,12 +24,12 @@ class ItemViewModel() : ViewModel() {
         getItems()
     }
 
-    fun getItems() {
+    fun getItems(searchQuery : String? = null) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
                 delay(2000)
-                val items = ItemRepository.getItems()
+                val items = ItemRepository.getItems(searchQuery)
                 _uiState.value = _uiState.value.copy(items = items, isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.message, isLoading = false)
