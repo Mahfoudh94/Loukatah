@@ -6,13 +6,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,28 +21,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import com.example.loukatah.model.Item
 import com.example.loukatah.model.ItemCategory
-import java.text.SimpleDateFormat
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.loukatah.R
 
 @Composable
-fun MainScreen(itemViewModel: ItemViewModel, itemCategoryViewModel: ItemCategoryViewModel, modifier: Modifier = Modifier) {
-    var selectedScreen = remember { mutableStateOf(0) }
-    Scaffold(
-        floatingActionButton = { AddItemButton() },
-        bottomBar = { BottomNavigationBar(
-            selectedScreen = selectedScreen.value,
-            onSelected = {
-                selectedScreen.value = it
-            }
-        ) },
-    ){
+fun MainScreen(
+    itemViewModel: ItemViewModel,
+    itemCategoryViewModel: ItemCategoryViewModel,
+    modifier: Modifier = Modifier,
+    onSelectItem: (Item) -> Unit
+) {
+    Scaffold(){
         padding ->
         val itemState by itemViewModel.uiState.collectAsState()
         val categoryState by itemCategoryViewModel.categoryState.collectAsState()
@@ -99,10 +88,14 @@ fun MainScreen(itemViewModel: ItemViewModel, itemCategoryViewModel: ItemCategory
                         }
                     }
                 }
-
                 else -> {
                     items(itemState.items) { item ->
-                        ItemCard(item = item)
+                        ItemCard(
+                            item = item,
+                            onSelect = {
+                                onSelectItem(item)
+                            }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -111,8 +104,6 @@ fun MainScreen(itemViewModel: ItemViewModel, itemCategoryViewModel: ItemCategory
         }
     }
 }
-
-
 //@Preview
 @Composable
 fun SearchBar(
@@ -145,12 +136,16 @@ fun SearchBar(
 }
 
 @Composable
-fun ItemCard(item : Item){
+fun ItemCard(
+    item : Item,
+    onSelect : () -> Unit
+){
     Card(
         modifier = Modifier
             .fillMaxWidth()
         ,
         shape = RoundedCornerShape(12.dp),
+        onClick = {onSelect()}
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -200,41 +195,6 @@ fun StatusTag(status: String) {
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Text(text = status, color = Color.White, fontSize = 12.sp)
-    }
-}
-//@Preview
-@Composable
-fun AddItemButton(modifier: Modifier = Modifier) {
-    FloatingActionButton(
-        onClick = { /* Handle Add Item */ },
-        modifier = Modifier.background(Color.Blue, shape = RoundedCornerShape(12.dp))
-       // backgroundColor = Color.Blue
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = "Add Item", tint = Color.White)
-    }
-}
-//@Preview
-@Composable
-fun BottomNavigationBar(
-    selectedScreen : Int = 0,
-    onSelected : (Int) -> Unit = {}
-) {
-    BottomNavigation() {
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Default.Home, contentDescription = "Home",tint = Color(if(selectedScreen == 0) 0xFFFFFFFF else 0xFF6C757D)) },
-            selected = selectedScreen == 0,
-            onClick = { onSelected(0) },
-        )
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Map",tint = Color(if(selectedScreen == 1) 0xFFFFFFFF else 0xFF6C757D)) },
-            selected = selectedScreen == 1,
-            onClick = { onSelected(1) }
-        )
-        BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Profile",tint = Color(if(selectedScreen == 2) 0xFFFFFFFF else 0xFF6C757D)) },
-            selected = selectedScreen == 2,
-            onClick = { onSelected(2) }
-        )
     }
 }
 
