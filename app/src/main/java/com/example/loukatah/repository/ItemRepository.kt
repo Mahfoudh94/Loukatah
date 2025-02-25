@@ -15,7 +15,8 @@ object ItemRepository {
             coordinates = Pair(34.0522, -118.2437),
             date_lost = Date(),
             createdAt = Date(),
-            updatedAt = Date()
+            updatedAt = Date(),
+
         ),
         Item(
             id = "2",
@@ -28,6 +29,7 @@ object ItemRepository {
             date_lost = Date(),
             createdAt = Date(),
             updatedAt = Date()
+
         ),
         Item(
             id = "3",
