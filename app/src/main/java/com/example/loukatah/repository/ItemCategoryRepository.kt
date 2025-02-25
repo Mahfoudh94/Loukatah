@@ -7,17 +7,17 @@ object ItemCategoryRepository {
         ItemCategory(
             id = "1",
             name = "Personal Items",
-            icon = "https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
+            icon = "https://img.icons8.com/material-sharp/24/user.png"
         ),
         ItemCategory(
             id = "2",
             name = "Electronics",
-            icon = "https://cdn-icons-png.flaticon.com/512/2972/2972035.png"
+            icon = "https://img.icons8.com/material/24/smartphone.png"
         ),
         ItemCategory(
             id = "3",
             name = "Documents",
-            icon = "https://cdn-icons-png.flaticon.com/512/2997/2997142.png"
+            icon = "https://img.icons8.com/material-outlined/24/document--v1.png"
         )
     )
 
