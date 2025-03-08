@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.loukatah.presentation.viewmodel.AddItemEvent
 import com.example.loukatah.presentation.viewmodel.AddItemViewModel
 import com.example.loukatah.presentation.viewmodel.ItemCategoryViewModel
 
@@ -46,14 +47,21 @@ fun AddItemScreen(
     itemCategoryViewModel: ItemCategoryViewModel = hiltViewModel(),
     addItemViewModel: AddItemViewModel = hiltViewModel()
 ) {
-    // State
-    
+    // Get current UI state
+    val uiState by addItemViewModel.uiState.collectAsState()
+
+    // Get category data from the ItemCategoryViewModel
     val categoryState by itemCategoryViewModel.categoryState.collectAsState()
     val categories = categoryState.categories
 
-    // Events
+    // States for dropdown expansions
+    var isStatusDropdownExpanded by remember { mutableStateOf(false) }
+    var isCategoryDropdownExpanded by remember { mutableStateOf(false) }
 
-    
+    // Selected status and category
+    var selectedStatus by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("") }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -81,104 +89,108 @@ fun AddItemScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
-                // Title
+                // Title Field
                 OutlinedTextField(
-                    value = "",//TODO() ,
-                    onValueChange = { },//TODO() ,
+                    value = uiState.title,
+                    onValueChange = { addItemViewModel.onEvent(AddItemEvent.TitleChange(it)) },
                     label = { Text("Title") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                // Description
+
+                // Description Field
                 OutlinedTextField(
-                    value = "",//TODO() ,
-                    onValueChange = { },//TODO() ,
+                    value = uiState.description,
+                    onValueChange = { addItemViewModel.onEvent(AddItemEvent.DescriptionChange(it)) },
                     label = { Text("Description") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                // Status dropdown
+
+                // Status Dropdown
                 ExposedDropdownMenuBox(
-                    expanded = false ,//TODO
-                    onExpandedChange = { }, //TODO
+                    expanded = isStatusDropdownExpanded,
+                    onExpandedChange = { isStatusDropdownExpanded = !isStatusDropdownExpanded },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedTextField(
-                        value = "", //TODO
-                        onValueChange = {},
+                        value = selectedStatus,
+                        onValueChange = { },
                         readOnly = true,
                         label = { Text("Status") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true, //TODO
-                            ) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isStatusDropdownExpanded)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor()
                     )
-                    
+
                     ExposedDropdownMenu(
-                        expanded = false, //TODO
-                        onDismissRequest = { } ,//TODO
+                        expanded = isStatusDropdownExpanded,
+                        onDismissRequest = { isStatusDropdownExpanded = false },
                     ) {
                         listOf("Lost", "Found").forEach { option ->
                             DropdownMenuItem(
                                 text = { Text(text = option) },
                                 onClick = {
-                                    //TODO
+                                    selectedStatus = option
+                                    addItemViewModel.onEvent(AddItemEvent.StatusChange(option))
+                                    isStatusDropdownExpanded = false
                                 }
                             )
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                // Category dropdown
+
+                // Category Dropdown
                 ExposedDropdownMenuBox(
-                    expanded = false, //TODO
-                    onExpandedChange = { }, //TODO
+                    expanded = isCategoryDropdownExpanded,
+                    onExpandedChange = { isCategoryDropdownExpanded = !isCategoryDropdownExpanded },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedTextField(
-                        value =  "Select Category",
-                        onValueChange = {},
+                        value = selectedCategory.ifEmpty { "Select Category" },
+                        onValueChange = { },
                         readOnly = true,
                         label = { Text("Category") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isCategoryDropdownExpanded) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor()
                     )
-                    
+
                     ExposedDropdownMenu(
-                        expanded = false,//TODO
-                        onDismissRequest = { } , //TODO
+                        expanded = isCategoryDropdownExpanded,
+                        onDismissRequest = { isCategoryDropdownExpanded = false },
                     ) {
                         categories.forEach { category ->
                             DropdownMenuItem(
                                 text = { Text(text = category.name) },
                                 onClick = {
-                                    //TODO
+                                    selectedCategory = category.name
+                                    addItemViewModel.onEvent(AddItemEvent.CategoryChange(category.name))
+                                    isCategoryDropdownExpanded = false
                                 }
                             )
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
-                
-                // Submit button
+
+                // Submit Button
                 Button(
                     onClick = {
-                        // In a real app, we would save the item here
-                        // For now, just call the callback
-                        onItemAdded()
+                        addItemViewModel.onEvent(AddItemEvent.SaveItem)
+                        onItemAdded()  // callback after the item is added
                     },
-                    enabled = true, // TODO
+                    enabled = uiState.title.isNotBlank() && uiState.description.isNotBlank() && selectedStatus.isNotBlank() && selectedCategory.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "Add Item")
