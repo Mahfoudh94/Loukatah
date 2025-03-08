@@ -1,10 +1,14 @@
-package com.example.loukatah.repository
+package com.example.loukatah.data.repository
 
-import com.example.loukatah.model.Item
+import com.example.loukatah.data.model.Item
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Date
+import javax.inject.Inject
 
-object ItemRepository {
-    private val items = listOf(
+
+class ItemRepositoryImpl @Inject constructor() : ItemRepository {
+    private val items = mutableListOf(
         Item(
             id = "1",
             title = "Lost Wallet",
@@ -66,35 +70,17 @@ object ItemRepository {
             updatedAt = Date()
         )
     )
-    fun getCategoryPI(S : String):List<Item>{
-         val newItems = mutableListOf<Item>()
-            for(item in items){
-                if (item.item_category == "Personal Items" && (item.description.contains(S , ignoreCase = true) || S == "")){
-                        newItems.add(item)
-                }
-            }
-        return newItems
-    }
-    fun getCategoryE(S : String):List<Item>{
-        val newItems = mutableListOf<Item>()
-        for(item in items){
-            if (item.item_category == "Electronics" && (item.description.contains(S , ignoreCase = true) || S == "")){
-                    newItems.add(item)
-            }
-        }
-        return newItems
-    }
-    fun getCategoryD(S : String):List<Item>{
-        val newItems = mutableListOf<Item>()
-        for(item in items){
-            if (item.item_category == "Documents" && (item.description.contains(S , ignoreCase = true) || S == "")){
-                newItems.add(item)
-            }
-        }
-        return newItems
+
+    private val _itemsFlow = MutableSharedFlow<List<Item>>(replay = 1)
+
+    init {
+        _itemsFlow.tryEmit(items.toList())
     }
 
-    fun getItems(): List<Item> {
-        return items
+    override fun getItems(): Flow<List<Item>> = _itemsFlow
+
+    override suspend fun addItem(item: Item) {
+        items.add(item)
+        _itemsFlow.emit(items.toList())
     }
 }

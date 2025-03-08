@@ -1,4 +1,4 @@
-package com.example.loukatah.model
+package com.example.loukatah.data.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -1,4 +1,4 @@
-package com.example.loukatah.repository
+package com.example.loukatah.data.repository
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AllInbox
@@ -9,16 +9,13 @@ import androidx.compose.material.icons.outlined.AllInbox
 import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.PhoneAndroid
-import com.example.loukatah.model.ItemCategory
+import com.example.loukatah.data.model.ItemCategory
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import javax.inject.Inject
 
-object ItemCategoryRepository {
-    private val categories = listOf(
-        ItemCategory(
-            id = "0",
-            name = "All",
-            selectedIcon = Icons.Filled.AllInbox,
-            unselectedIcon =  Icons.Outlined.AllInbox,
-        ),
+class ItemCategoryRepositoryImpl @Inject constructor() : ItemCategoryRepository {
+    private val categories = mutableListOf(
         ItemCategory(
             id = "1",
             name = "Personal Items",
@@ -39,7 +36,13 @@ object ItemCategoryRepository {
         )
     )
 
-    fun getCategories(): List<ItemCategory> {
-        return categories
+    private val _categoryFlow = MutableSharedFlow<List<ItemCategory>>(replay = 1)
+
+    init {
+        _categoryFlow.tryEmit(categories.toList())
     }
+
+
+
+    override fun getCategories(): Flow<List<ItemCategory>> = _categoryFlow
 }
