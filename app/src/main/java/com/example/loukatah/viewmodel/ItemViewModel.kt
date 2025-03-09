@@ -20,7 +20,7 @@ class ItemViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(UIState())
     val uiState: StateFlow<UIState> = _uiState.asStateFlow()
 
-    init {
+   init {
         getItems(4 , "")
     }
 
@@ -30,11 +30,12 @@ class ItemViewModel() : ViewModel() {
             try {
                 delay(2000)
 
+
                 if(X == 2){
-                    val items = ItemRepository.getCategoryE(S)
+                 val items = ItemRepository.getCategoryE(S)
                     _uiState.value = _uiState.value.copy(items = items, isLoading = false)
                 }else if (X == 3){
-                    val items = ItemRepository.getCategoryD(S)
+                   val items = ItemRepository.getCategoryD(S)
                     _uiState.value = _uiState.value.copy(items = items, isLoading = false)
                 }else if (X == 1){
                     val items = ItemRepository.getCategoryPI(S)

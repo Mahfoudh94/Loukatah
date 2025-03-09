@@ -8,7 +8,7 @@ val SkyBlue = Color(0xFF5A8E9B)         // Secondary - Calming teal
 val Coral = Color(0xFFFF6B6B)           // Tertiary - Warm accent
 
 // Dark Theme Colors
-val MidnightBlue = Color(0xFF1A2F4B)    // Dark primary
+val MidnightBlue = Color(0xFF036FFD)    // Dark primary
 val DeepTeal = Color(0xFF406874)        // Dark secondary
 val SoftCoral = Color(0xFFE85A5A)       // Dark tertiary
 

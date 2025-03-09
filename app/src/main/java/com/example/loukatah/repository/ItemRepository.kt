@@ -69,27 +69,27 @@ object ItemRepository {
     fun getCategoryPI(S : String):List<Item>{
          val newItems = mutableListOf<Item>()
             for(item in items){
-                if (item.item_category == "Personal Items" && (item.description.contains(S , ignoreCase = true) || S == "")){
+         //     if (item.item_category == "Personal Items" && (item.description.contains(S , ignoreCase = true) || S == "")){
                         newItems.add(item)
-                }
+          //    }
             }
         return newItems
     }
     fun getCategoryE(S : String):List<Item>{
         val newItems = mutableListOf<Item>()
         for(item in items){
-            if (item.item_category == "Electronics" && (item.description.contains(S , ignoreCase = true) || S == "")){
+       //   if (item.item_category == "Electronics" && (item.description.contains(S , ignoreCase = true) || S == "")){
                     newItems.add(item)
-            }
+         // }
         }
         return newItems
     }
     fun getCategoryD(S : String):List<Item>{
         val newItems = mutableListOf<Item>()
         for(item in items){
-            if (item.item_category == "Documents" && (item.description.contains(S , ignoreCase = true) || S == "")){
+         // if (item.item_category == "Documents" && (item.description.contains(S , ignoreCase = true) || S == "")){
                 newItems.add(item)
-            }
+          //}
         }
         return newItems
     }
