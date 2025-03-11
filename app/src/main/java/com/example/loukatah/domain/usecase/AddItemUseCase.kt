@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class AddItemUseCase @Inject constructor(private val itemRepository: ItemRepository) {
 
-    suspend fun invoke(item: Item) {
+    suspend operator fun invoke(item: Item) {
         itemRepository.addItem(item)
     }
 }
