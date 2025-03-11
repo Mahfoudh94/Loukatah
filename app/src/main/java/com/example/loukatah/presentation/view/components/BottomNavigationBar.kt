@@ -1,10 +1,10 @@
 package com.example.loukatah.presentation.view.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AllInbox
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AllInbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,13 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.loukatah.data.model.ItemCategory
 import com.example.loukatah.presentation.view.navigation.Screen
-
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    // Observe the current back stack entry to get the current route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -28,39 +25,29 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationBarItem(
             selected = currentRoute == Screen.Home.route,
             onClick = { navController.navigate(Screen.Home.route) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.AllInbox,
-                    contentDescription = "Home"
-                )
-            },
-            label = { Text("Home") }
+            icon = { Icon(Icons.Filled.AllInbox, contentDescription = "الرئيسية") },
+            label = { Text("الرئيسية") }
         )
-
 
         NavigationBarItem(
             selected = currentRoute == Screen.Account.route,
             onClick = { navController.navigate(Screen.Account.route) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.AccountBox,
-                    contentDescription = "Account"
-                )
-            },
-            label = { Text("Account") }
+            icon = { Icon(Icons.Filled.AccountBox, contentDescription = "الحساب") },
+            label = { Text("الحساب") }
+        )
+
+        NavigationBarItem(
+            selected = currentRoute == "add_item",
+            onClick = { navController.navigate("add_item") },
+            icon = { Icon(Icons.Filled.Add, contentDescription = "إضافة عنصر") },
+            label = { Text("إضافة") }
         )
 
         NavigationBarItem(
             selected = currentRoute == Screen.Settings.route,
             onClick = { navController.navigate(Screen.Settings.route) },
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Settings"
-                )
-            },
-            label = { Text("Settings") }
+            icon = { Icon(Icons.Filled.Settings, contentDescription = "الإعدادات") },
+            label = { Text("الإعدادات") }
         )
     }
-
 }
