@@ -10,11 +10,11 @@ sealed class Screen(val route: String) {
     /**
      * Home screen showing the list of items
      */
-    object Home : Screen("home")
+    object Home : Screen("Home")
 
-    object Account : Screen("account")
+    object Account : Screen("Account")
 
-    object Settings : Screen("settings")
+    object Settings : Screen("Settings")
 
 
     object ItemDetail : Screen("item_detail/{$ITEM_ID_KEY}") {

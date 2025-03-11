@@ -1,41 +1,20 @@
 package com.example.loukatah.presentation.view.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.loukatah.presentation.viewmodel.AddItemEvent
 import com.example.loukatah.presentation.viewmodel.AddItemViewModel
 import com.example.loukatah.presentation.viewmodel.ItemCategoryViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,13 +26,13 @@ fun AddItemScreen(
     addItemViewModel: AddItemViewModel = hiltViewModel()
 ) {
     // State
-    
     val categoryState by itemCategoryViewModel.categoryState.collectAsState()
     val categories = categoryState.categories
 
-    // Events
+    val uiState by addItemViewModel.uiState.collectAsState()
+    var isImageError by remember { mutableStateOf(false) }
 
-    
+    // Events
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -83,105 +62,157 @@ fun AddItemScreen(
             ) {
                 // Title
                 OutlinedTextField(
-                    value = "",//TODO() ,
-                    onValueChange = { },//TODO() ,
+                    value = uiState.title,
+                    onValueChange = { addItemViewModel.onEvent(AddItemEvent.TitleChange(it)) },
                     label = { Text("Title") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Description
                 OutlinedTextField(
-                    value = "",//TODO() ,
-                    onValueChange = { },//TODO() ,
+                    value = uiState.description,
+                    onValueChange = { addItemViewModel.onEvent(AddItemEvent.DescriptionChange(it)) },
                     label = { Text("Description") },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
+                // Image URL
+                OutlinedTextField(
+                    value = uiState.picture,
+                    onValueChange = {
+                        addItemViewModel.onEvent(AddItemEvent.PictureChange(it))
+                        isImageError = it.isBlank()
+                    },
+                    label = { Text("Image URL") },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = isImageError
+                )
+
+                if (isImageError) {
+                    Text(
+                        text = "Image URL is required",
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // Status dropdown
+                var statusExpanded by remember { mutableStateOf(false) }
                 ExposedDropdownMenuBox(
-                    expanded = false ,//TODO
-                    onExpandedChange = { }, //TODO
+                    expanded = statusExpanded,
+                    onExpandedChange = { statusExpanded = it },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedTextField(
-                        value = "", //TODO
+                        value = uiState.status,
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Status") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true, //TODO
-                            ) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = statusExpanded) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor()
                     )
-                    
                     ExposedDropdownMenu(
-                        expanded = false, //TODO
-                        onDismissRequest = { } ,//TODO
+                        expanded = statusExpanded,
+                        onDismissRequest = { statusExpanded = false },
                     ) {
                         listOf("Lost", "Found").forEach { option ->
                             DropdownMenuItem(
                                 text = { Text(text = option) },
                                 onClick = {
-                                    //TODO
+                                    addItemViewModel.onEvent(AddItemEvent.StatusChange(option))
+                                    statusExpanded = false
                                 }
                             )
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Category dropdown
+                var categoryExpanded by remember { mutableStateOf(false) }
                 ExposedDropdownMenuBox(
-                    expanded = false, //TODO
-                    onExpandedChange = { }, //TODO
+                    expanded = categoryExpanded,
+                    onExpandedChange = { categoryExpanded = it },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedTextField(
-                        value =  "Select Category",
+                        value = uiState.category,
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Category") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = categoryExpanded) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .menuAnchor()
                     )
-                    
+
                     ExposedDropdownMenu(
-                        expanded = false,//TODO
-                        onDismissRequest = { } , //TODO
+                        expanded = categoryExpanded,
+                        onDismissRequest = { categoryExpanded = false },
                     ) {
                         categories.forEach { category ->
                             DropdownMenuItem(
                                 text = { Text(text = category.name) },
                                 onClick = {
-                                    //TODO
+                                    addItemViewModel.onEvent(AddItemEvent.CategoryChange(category.name))
+                                    categoryExpanded = false
                                 }
                             )
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(32.dp))
-                
+
                 // Submit button
                 Button(
                     onClick = {
-                        // In a real app, we would save the item here
-                        // For now, just call the callback
-                        onItemAdded()
+                        if (uiState.picture.isBlank()) {
+                            isImageError = true
+                        } else {
+                            addItemViewModel.onEvent(AddItemEvent.SaveItem)
+                            if (uiState.isSuccess) {
+                                onItemAdded()
+                            }
+                        }
                     },
-                    enabled = true, // TODO
+                    enabled = !uiState.isLoading && uiState.picture.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "Add Item")
+                }
+
+                // Loading Indicator
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                }
+
+                // Error Message
+                uiState.error?.let { error ->
+                    Text(
+                        text = error,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+
+                // Success Message
+                if (uiState.isSuccess) {
+                    Text(
+                        text = "Item added successfully",
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(8.dp)
+                    )
                 }
             }
         }

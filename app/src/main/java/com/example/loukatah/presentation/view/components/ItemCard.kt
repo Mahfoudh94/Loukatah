@@ -1,5 +1,6 @@
 package com.example.loukatah.presentation.view.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import java.text.SimpleDateFormat
  * @param onItemClick Callback when the item is clicked
  * @param modifier Modifier for customizing the layout
  */
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun ItemCard(
     item: Item,
@@ -75,7 +77,7 @@ fun ItemCard(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Lost/Found Date: ${SimpleDateFormat("MMM dd, yyyy").format(item.date_lost)}",
+                    text = "${item.status} Date: ${SimpleDateFormat("MMM dd, yyyy").format(item.date_lost)}",
                     style = MaterialTheme.typography.labelSmall
                 )
             }
