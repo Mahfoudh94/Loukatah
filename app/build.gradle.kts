@@ -7,21 +7,17 @@ plugins {
     alias(libs.plugins.serialization)
     //alias(libs.plugins.google.services)
 }
-
 android {
     namespace = "com.example.loukatah"
     compileSdk = 35
-
     defaultConfig {
         applicationId = "com.example.loukatah"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -42,9 +38,7 @@ android {
         compose = true
     }
 }
-
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     // ViewModel Kotlin extensions for easier ViewModel usage
@@ -55,23 +49,17 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     // Coil image loading library for Compose to load and display images efficiently
     implementation(libs.io.coil.kt.compose)
-
     //Dagger Hilt
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
     //Navigation compose
     implementation(libs.androidx.navigation.compose)
-
-
     //firebase
-
 //    implementation(platform(libs.google.firebase.bom))
 //    implementation(libs.google.firebase.analytics.ktx)
 //    implementation(libs.google.firebase.auth.ktx)
 //    implementation(libs.google.firebase.firestore.ktx)
-
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
