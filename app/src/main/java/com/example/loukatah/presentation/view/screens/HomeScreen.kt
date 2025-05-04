@@ -47,6 +47,7 @@ fun HomeScreen(
 ) {
     // State
     val itemState by itemViewModel.uiState.collectAsState()
+   
 
     // Search query
     var searchQuery by remember { mutableStateOf("") }

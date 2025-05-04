@@ -3,6 +3,7 @@ package com.example.loukatah.data.repository
 import com.example.loukatah.data.model.Item
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.callbackFlow
 import java.util.Date
 import javax.inject.Inject
 
@@ -82,5 +83,21 @@ class ItemRepositoryImpl @Inject constructor() : ItemRepository {
     override suspend fun addItem(item: Item) {
         items.add(item)
         _itemsFlow.emit(items.toList())
+    }
+
+    override suspend fun updateItem(item: Item) {
+
+    }
+
+    override suspend fun deleteItem(itemId: String) {
+
+    }
+
+    override fun getItemById(itemId: String): Flow<Item?> = callbackFlow {
+
+    }
+
+    override fun searchItems(query: String, category: String?, status: String?): Flow<List<Item>> = callbackFlow {
+
     }
 }

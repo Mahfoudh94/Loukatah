@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.serialization)
-    //alias(libs.plugins.google.services)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -58,6 +58,7 @@ dependencies {
 
     //Dagger Hilt
     implementation(libs.dagger.hilt)
+    implementation(libs.firebase.firestore.ktx)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -67,10 +68,14 @@ dependencies {
 
     //firebase
 
-//    implementation(platform(libs.google.firebase.bom))
-//    implementation(libs.google.firebase.analytics.ktx)
-//    implementation(libs.google.firebase.auth.ktx)
-//    implementation(libs.google.firebase.firestore.ktx)
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.analytics.ktx)
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
+    implementation ("com.google.firebase:firebase-auth:21.0.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
+    implementation ("com.google.firebase:firebase-storage-ktx")
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -87,6 +92,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     // Extended Icons
     implementation(libs.androidx.compose.material.icons.extended)
-
 
 }

@@ -57,7 +57,7 @@ class AddItemViewModel @Inject constructor(private val addItemUseCase: AddItemUs
         val currentState = _uiState.value
         viewModelScope.launch {
             addItemUseCase.invoke(Item(
-                    id = "9",
+                    id = Math.random().toString(),
                     title = currentState.title,
                     description = currentState.description,
                     status = currentState.status,

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "718014983346",
+    "project_id": "loukatah-bd7390eb",
+    "storage_bucket": "loukatah-bd7390eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718014983346:android:db90246c0f9b31fd852dab",
+        "android_client_info": {
+          "package_name": "com.example.loukatah"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdIuBKwUkroneiExjLK14wdSUt3i4mW-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
