@@ -10,6 +10,8 @@ sealed class Screen(val route: String) {
     /**
      * Home screen showing the list of items
      */
+    object Login : Screen("login")
+    object Signup : Screen("signup")
     object Home : Screen("home")
 
     object Account : Screen("account")
@@ -33,6 +35,8 @@ sealed class Screen(val route: String) {
     
 
     object AddItem : Screen("add_item")
+
+
     
     companion object {
         const val ITEM_ID_KEY = "itemId"

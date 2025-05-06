@@ -10,7 +10,10 @@ import com.example.loukatah.presentation.view.screens.AccountScreen
 import com.example.loukatah.presentation.view.screens.HomeScreen
 import com.example.loukatah.presentation.view.screens.ItemDetailScreen
 import com.example.loukatah.presentation.view.screens.AddItemScreen
+import com.example.loukatah.presentation.view.screens.LoginScreen
 import com.example.loukatah.presentation.view.screens.SettingsScreen
+import com.example.loukatah.presentation.view.screens.SignupScreen
+import com.example.loukatah.presentation.viewmodel.AuthViewModel
 
 
 @SuppressLint("ComposableDestinationInComposeScope")
@@ -21,54 +24,80 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Login.route,
         modifier = modifier
     ) {
-            composable(route = Screen.Home.route) {
-                HomeScreen(
-                    onItemClick = { itemId ->
-                        navController.navigate(Screen.ItemDetail.createRoute(itemId))
-                    },
-                    onAddItemClick = {
-                        navController.navigate(Screen.AddItem.route)
-                    }
-                )
-            }
+        composable(route = Screen.Login.route) {
+            LoginScreen(
+                navController = navController,
+                modifier = modifier,
+                authViewModel = AuthViewModel()
+            )
+        }
 
-            composable(route = Screen.Account.route) {
+        composable(route = Screen.Signup.route) {
+            SignupScreen(
+                navController = navController,
+                modifier = modifier,
+                authViewModel = AuthViewModel()
+            )
+        }
 
-                AccountScreen()
 
-            }
+        composable(route = Screen.Home.route) {
+            HomeScreen(
+                onItemClick = { itemId ->
+                    navController.navigate(Screen.ItemDetail.createRoute(itemId))
+                },
+                onAddItemClick = {
+                    navController.navigate(Screen.AddItem.route)
+                }, navController = navController
+            )
+        }
 
-            composable(route = Screen.Settings.route) {
+        composable(route = Screen.Account.route) {
 
-                SettingsScreen()
+            AccountScreen(
+                navController = navController,
+                modifier = modifier
+            )
 
-            }
+        }
 
-            composable(
-                route = Screen.ItemDetail.route,
-                arguments = Screen.ItemDetail.arguments
-            ) {
-                val itemId = it.arguments?.getString(Screen.ItemDetail.ITEM_ID_KEY) ?: ""
-                ItemDetailScreen(
-                    itemId = itemId,
-                    onBackClick = {
-                        navController.popBackStack()
-                    }
-                )
-            }
+        composable(route = Screen.Settings.route) {
 
-            composable(route = Screen.AddItem.route) {
-                AddItemScreen(
-                    onBackClick = {
-                        navController.popBackStack()
-                    },
-                    onItemAdded = {
-                        navController.popBackStack()
-                    }
-                )
-            }
+            SettingsScreen(
+                navController = navController,
+                modifier = modifier
+            )
+
+        }
+
+        composable(
+            route = Screen.ItemDetail.route,
+            arguments = Screen.ItemDetail.arguments
+        ) {
+            val itemId = it.arguments?.getString(Screen.ItemDetail.ITEM_ID_KEY) ?: ""
+            ItemDetailScreen(
+                itemId = itemId,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                navController = navController
+            )
+        }
+
+
+
+        composable(route = Screen.AddItem.route) {
+            AddItemScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onItemAdded = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
+}

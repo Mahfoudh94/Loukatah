@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.loukatah.data.model.Item
-import com.example.loukatah.domain.usecase.AddItemUseCase
+import com.example.loukatah.domain.usecase.EditItemUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,48 +19,50 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AddItemViewModel @Inject constructor(private val addItemUseCase: AddItemUseCase): ViewModel() {
+class EditItemViewModel @Inject constructor(private val editItemUseCase: EditItemUseCase): ViewModel() {
     //TODO: Add Item ViewModel logic
-    private val _uiState = MutableStateFlow(AddItemUiState())
-    val uiState : StateFlow<AddItemUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(EditItemUiState())
+    val uiState : StateFlow<EditItemUiState> = _uiState.asStateFlow()
 
-    fun onEvent(event: AddItemEvent){
+    fun onEvent(event: EditItemEvent){
         when(event) {
-            is AddItemEvent.TitleChange -> {
+            is EditItemEvent.TitleChange -> {
                 _uiState.update { it.copy(title = event.title) }
                 val isValid = validate(_uiState.value)
                 updateIsEnable(isValid);
             }
-            is AddItemEvent.DescriptionChange -> {
+            is EditItemEvent.DescriptionChange -> {
                 _uiState.update { it.copy(description = event.description) }
                 val isValid = validate(_uiState.value)
                 updateIsEnable(isValid);
             }
-            is AddItemEvent.StatusChange -> {
+            is EditItemEvent.StatusChange -> {
                 _uiState.update { it.copy(status = event.status) }
             }
-            is AddItemEvent.PictureChange -> {
+            is EditItemEvent.PictureChange -> {
                 _uiState.update { it.copy(picture = event.picture) }
                 val isValid = validate(_uiState.value)
                 updateIsEnable(isValid);
             }
-            is AddItemEvent.CategoryChange -> {
+            is EditItemEvent.CategoryChange -> {
                 _uiState.update { it.copy(category = event.category) }
                 val isValid = validate(_uiState.value)
                 updateIsEnable(isValid);
             }
-            is AddItemEvent.SaveItem -> {
-                saveItem();
+            is EditItemEvent.SaveItem -> {
+                saveItem(
+                    idDoc = event.idDoc
+                );
             }
         }
     }
-    fun saveItem(
-    ) {
+    fun saveItem(idDoc: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         val currentState = _uiState.value
         viewModelScope.launch {
-            addItemUseCase.invoke(Item(
+            editItemUseCase.invoke(Item(
                     id = Math.random().toString(),
+                    idDoc= idDoc,
                     title = currentState.title,
                     description = currentState.description,
                     status = currentState.status,
@@ -74,7 +76,7 @@ class AddItemViewModel @Inject constructor(private val addItemUseCase: AddItemUs
                 ))
         }
     }
-    fun validate(state: AddItemUiState): Boolean {
+    fun validate(state: EditItemUiState): Boolean {
         val isTitleAndDescriptionAndCategoryValid = isValidTitle(state.title) && isValidDescription(state.description) && isValidCategory(state.category)
         val isPictureValid = isValidUrl(state.picture)
         return isTitleAndDescriptionAndCategoryValid && isPictureValid
@@ -130,7 +132,7 @@ class AddItemViewModel @Inject constructor(private val addItemUseCase: AddItemUs
 
 }
 
-data class AddItemUiState(
+data class EditItemUiState(
     val title: String = "",
     val description: String = "",
     val status: String = "",
@@ -144,11 +146,11 @@ data class AddItemUiState(
     val inValidCategory: Boolean = true
 )
 
-sealed class AddItemEvent {
-    data class TitleChange(val title: String): AddItemEvent()
-    data class DescriptionChange(val description: String): AddItemEvent()
-    data class StatusChange(val status: String): AddItemEvent()
-    data class PictureChange(val picture: String): AddItemEvent()
-    data class CategoryChange(val category: String): AddItemEvent()
-    object SaveItem: AddItemEvent()
+sealed class EditItemEvent {
+    data class TitleChange(val title: String): EditItemEvent()
+    data class DescriptionChange(val description: String): EditItemEvent()
+    data class StatusChange(val status: String): EditItemEvent()
+    data class PictureChange(val picture: String): EditItemEvent()
+    data class CategoryChange(val category: String): EditItemEvent()
+    data class SaveItem(val idDoc: String): EditItemEvent()
 }

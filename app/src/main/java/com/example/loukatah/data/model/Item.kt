@@ -5,6 +5,7 @@ import java.util.Date
 
 data class Item(
     val id: String = "",
+    val idDoc:String="",
     val title: String = "",
     val description: String = "",
     val status: String = "",
@@ -41,10 +42,11 @@ data class Item(
          * تحويل Map من Firestore إلى كائن Item
          * @throws ClassCastException إذا كانت بيانات الخريطة غير صالحة
          */
-        fun fromMap(map: Map<String, Any>): Item {
+        fun fromMap(map: Map<String, Any>,idDoc:String): Item {
             return try {
                 Item(
                     id = map["id"]?.toString() ?: "",
+                    idDoc=idDoc,
                     title = map["title"]?.toString() ?: "",
                     description = map["description"]?.toString() ?: "",
                     status = map["status"]?.toString() ?: "",

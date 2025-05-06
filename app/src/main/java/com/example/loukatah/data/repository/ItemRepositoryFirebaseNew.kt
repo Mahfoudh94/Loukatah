@@ -51,7 +51,7 @@ class ItemRepositoryFirebaseNew @Inject constructor(
             }
 
             val itemsList = snapshot?.documents?.mapNotNull { doc ->
-                doc.data?.let { Item.fromMap(it) }
+                doc.data?.let { Item.fromMap(it,doc.id) }
             } ?: emptyList()
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -99,7 +99,7 @@ class ItemRepositoryFirebaseNew @Inject constructor(
                 return@addSnapshotListener
             }
 
-            trySend(snapshot?.data?.let { Item.fromMap(it) })
+            trySend(snapshot?.data?.let { Item.fromMap(it,snapshot.id) })
         }
 
         awaitClose { listener.remove() }
@@ -128,7 +128,7 @@ class ItemRepositoryFirebaseNew @Inject constructor(
             }
 
             val items = snapshot?.documents?.mapNotNull { doc ->
-                doc.data?.let { Item.fromMap(it) }
+                doc.data?.let { Item.fromMap(it,doc.id) }
             } ?: emptyList()
 
             trySend(items)

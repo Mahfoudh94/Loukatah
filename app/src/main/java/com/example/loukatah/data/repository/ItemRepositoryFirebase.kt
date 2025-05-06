@@ -40,7 +40,7 @@ class ItemRepositoryFirebase @Inject constructor() : ItemRepository {
             }
 
             val itemsList = snapshot?.documents?.mapNotNull { doc ->
-                doc.data?.let { Item.fromMap(it) }
+                doc.data?.let { Item.fromMap(it,doc.id) }
             } ?: emptyList()
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -50,23 +50,6 @@ class ItemRepositoryFirebase @Inject constructor() : ItemRepository {
     }
 
     override fun getItems(): Flow<List<Item>> = _itemsFlow
-//    override fun getItems(): Flow<List<Item>> = flow {
-//        try {
-//            val snapshot = itemCollection.get().await()
-//            val itemList = snapshot.documents.mapNotNull { document ->
-//                try {
-//                    document.toObject(Item::class.java)
-//                } catch (e: Exception) {
-//                    Log.e("ItemRepositoryFirebase", "Failed to deserialize item: ${e.message}")
-//                    null
-//                }
-//            }
-//            emit(itemList.toList())
-//        } catch (e: Exception) {
-//            // Handle errors (e.g., network issues)
-//            emit(emptyList()) // Or emit an error state
-//        }
-//    }
 
     override suspend fun addItem(item: Item) {
         try {
@@ -80,6 +63,12 @@ class ItemRepositoryFirebase @Inject constructor() : ItemRepository {
     }
 
     override suspend fun updateItem(item: Item) {
+        try {
+            itemsCollection.document(item.idDoc).update(item.toMap()).await()
+        } catch (e: Exception) {
+            // معالجة الخطأ - Error handling
+            throw Exception("فشل تحديث العنصر: ${e.message}")
+        }
     }
 
     override suspend fun deleteItem(itemId: String) {
