@@ -10,4 +10,8 @@ interface ItemRepository {
 
     suspend fun addItem(item: Item)
 
+    suspend fun deleteItem(itemId: String)
+    suspend fun updateItem(item: Item)
+    fun getItemById(itemId: String): Flow<Item?>
+    fun searchItems(query: String, category: String?, status: String?): Flow<List<Item>>
 }

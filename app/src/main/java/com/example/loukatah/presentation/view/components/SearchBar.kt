@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +27,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.loukatah.presentation.view.navigation.Screen
+import com.example.loukatah.presentation.viewmodel.AuthViewModel
 
 /**
  * Custom search bar component
@@ -40,7 +47,9 @@ fun SearchBar(
     onSearchQueryChange: (String) -> Unit,
     onClearClick: () -> Unit,
     onMenuClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     BasicTextField(
         modifier = modifier
@@ -83,17 +92,12 @@ fun SearchBar(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (searchQuery.isNotEmpty()) {
+                IconButton(
+                    onClick = { authViewModel.signout() }
+                ) {
                     Icon(
-                        modifier = Modifier.clickable { onClearClick() },
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Clear search",
-                    )
-                } else {
-                    Icon(
-                        modifier = Modifier.clickable { onMenuClick() },
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
+                        imageVector = Icons.Default.Logout,
+                        contentDescription = "Logout",
                     )
                 }
             }

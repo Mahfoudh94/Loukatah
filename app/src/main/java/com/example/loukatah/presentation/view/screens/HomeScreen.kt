@@ -1,5 +1,6 @@
 package com.example.loukatah.presentation.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,12 +29,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.loukatah.data.model.Item
+import com.example.loukatah.presentation.view.components.BottomNavigationBar
 import com.example.loukatah.presentation.view.components.ItemCard
 import com.example.loukatah.presentation.view.components.SearchBar
 import com.example.loukatah.presentation.view.components.ShimmerItemList
+import com.example.loukatah.presentation.view.navigation.Screen
+import com.example.loukatah.presentation.viewmodel.AuthState
+import com.example.loukatah.presentation.viewmodel.AuthViewModel
 import com.example.loukatah.presentation.viewmodel.ItemCategoryViewModel
 import com.example.loukatah.presentation.viewmodel.ItemViewModel
 
@@ -41,12 +49,26 @@ import com.example.loukatah.presentation.viewmodel.ItemViewModel
 fun HomeScreen(
     onItemClick: (String) -> Unit,
     onAddItemClick: () -> Unit,
-    modifier: Modifier = Modifier,
+
     itemViewModel: ItemViewModel = hiltViewModel(),
-    itemCategoryViewModel: ItemCategoryViewModel = hiltViewModel()
+    itemCategoryViewModel: ItemCategoryViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+    LaunchedEffect(authState.value) {
+        when(authState.value){
+            is AuthState.Unauthenticated -> navController.navigate(Screen.Login.route)
+            is AuthState.Error -> Toast.makeText(context,(authState.value as AuthState.Error).message,
+                Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
     // State
     val itemState by itemViewModel.uiState.collectAsState()
+
 
     // Search query
     var searchQuery by remember { mutableStateOf("") }
@@ -55,7 +77,7 @@ fun HomeScreen(
     // Filter items by search query
     val filteredItems = itemState.items.filter { item ->
         item.description.contains(searchQuery, ignoreCase = true) ||
-        item.title.contains(searchQuery, ignoreCase = true)
+                item.title.contains(searchQuery, ignoreCase = true)
     }
 
     Scaffold(
@@ -69,7 +91,8 @@ fun HomeScreen(
                 onClearClick = {
                     searchQuery = ""
                 },
-                onMenuClick = { /* Menu action if needed */ }
+                onMenuClick = { /* Menu action if needed */ },
+                navController=navController
             )
         },
         floatingActionButton = {
@@ -88,7 +111,8 @@ fun HomeScreen(
                     tint = Color.White
                 )
             }
-        }
+        },
+        bottomBar = { BottomNavigationBar(navController = navController) }
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             when {
@@ -97,6 +121,7 @@ fun HomeScreen(
                         ShimmerItemList()
                     }
                 }
+
                 filteredItems.isEmpty() -> {
                     item {
                         Box(
@@ -109,6 +134,7 @@ fun HomeScreen(
                         }
                     }
                 }
+
                 else -> {
                     items(filteredItems) { item ->
                         ItemCard(
