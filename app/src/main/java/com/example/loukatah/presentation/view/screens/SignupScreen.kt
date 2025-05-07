@@ -46,9 +46,15 @@ fun SignupScreen(modifier: Modifier = Modifier,navController: NavController,auth
         }
     }
     Column(
-        modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally
+        modifier.fillMaxSize().padding(8.dp), Arrangement.Center, Alignment.CenterHorizontally
 
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.img),
+            contentDescription = "App Logo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.size(120.dp)
+        )
         Text(text = "Signup Page", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(value = email,
